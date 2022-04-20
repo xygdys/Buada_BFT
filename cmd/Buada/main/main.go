@@ -56,6 +56,7 @@ func main() {
 		go smvba.SPBReceiver(p[i], 0, ID)
 	}
 
+	fmt.Println("Finish")
 	for {
 
 	}

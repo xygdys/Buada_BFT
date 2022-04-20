@@ -12,7 +12,7 @@ import (
 )
 
 //AsSender is run by the sender of a instance of provable broadcast
-func AsSender(p *party.HonestParty, ID []byte, value []byte, validation []byte) []byte {
+func PBSender(p *party.HonestParty, ID []byte, value []byte, validation []byte) []byte {
 	valueMessage := core.Encapsulation("Value", ID, p.PID, &protobuf.Value{
 		Value:      value,
 		Validation: validation,
@@ -53,7 +53,7 @@ wating:
 }
 
 //AsReceiver is run by the receiver of a instance of provable broadcast
-func AsReceiver(p *party.HonestParty, sender uint32, ID []byte, validator func(*party.HonestParty, []byte, uint32, []byte, []byte) error) ([]byte, []byte, error) {
+func PBReceiver(p *party.HonestParty, sender uint32, ID []byte, validator func(*party.HonestParty, []byte, uint32, []byte, []byte) error) ([]byte, []byte, error) {
 	var m *protobuf.Message
 	var ok bool
 	for {

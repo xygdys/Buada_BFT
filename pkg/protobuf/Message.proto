@@ -12,9 +12,28 @@ message Message {
 
 // provable broadcast
 message Value{
-  bytes value = 2;// paload
-  bytes validation = 3;// for external validating
+  bytes value = 1;// paload
+  bytes validation = 2;// for external validating
 }
 message Echo{
+  bytes sigshare = 1 ;
+}
+
+// smvba
+message Finish{
+  bytes value = 1;
+  bytes signature = 2;
+}
+message Done{
+  bytes coinShare = 1 ;
+}
+message Halt{//Halt:=<Finish> of the round-leader
+  bytes value = 1;
+  bytes signature = 2;
+}
+message PreVote{
+  bytes sigshare = 1 ;
+}
+message Vote{
   bytes sigshare = 1 ;
 }

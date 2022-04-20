@@ -37,7 +37,7 @@ func TestPb(t *testing.T) {
 	ID := []byte{1, 2}
 
 	go func() {
-		sig := AsSender(p[0], ID, value, validation)
+		sig := PBSender(p[0], ID, value, validation)
 
 		h := sha3.Sum512(value)
 		var buf bytes.Buffer
@@ -52,7 +52,7 @@ func TestPb(t *testing.T) {
 	}()
 
 	for i := uint32(0); i < N; i++ {
-		go AsReceiver(p[i], 0, ID, nil)
+		go PBReceiver(p[i], 0, ID, nil)
 	}
 
 	for {

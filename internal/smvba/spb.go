@@ -1,4 +1,4 @@
-package smvba //strong provable broadcast
+package smvba //strong provable broadcPBt
 
 import (
 	"Buada_BFT/internal/party"
@@ -20,8 +20,8 @@ func SPBSender(p *party.HonestParty, ID []byte, value []byte, validation []byte)
 	ID1 := buf1.Bytes()
 	ID2 := buf2.Bytes()
 
-	sig1 := pb.AsSender(p, ID1, value, validation)
-	sig2 := pb.AsSender(p, ID2, value, sig1)
+	sig1 := pb.PBSender(p, ID1, value, validation)
+	sig2 := pb.PBSender(p, ID2, value, sig1)
 
 	return value, sig2 //FINISH
 
@@ -37,8 +37,8 @@ func SPBReceiver(p *party.HonestParty, sender uint32, ID []byte) ([]byte, []byte
 	ID1 := buf1.Bytes()
 	ID2 := buf2.Bytes()
 
-	pb.AsReceiver(p, sender, ID1, nil)
-	value, sig, err := pb.AsReceiver(p, sender, ID2, validator)
+	pb.PBReceiver(p, sender, ID1, nil)
+	value, sig, err := pb.PBReceiver(p, sender, ID2, validator)
 	if err != nil {
 		return nil, nil, err
 	}
