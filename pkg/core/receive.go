@@ -2,8 +2,7 @@ package core
 
 import (
 	"Buada_BFT/pkg/protobuf"
-	"bytes"
-	"encoding/binary"
+	"Buada_BFT/pkg/utils"
 	"io"
 	"log"
 	"net"
@@ -47,7 +46,7 @@ func MakeReceiveChannel(port string) chan *protobuf.Message {
 					//Receive bytes
 					lengthBuf := make([]byte, 4)
 					_, err1 := io.ReadFull(conn, lengthBuf)
-					length := BytesToInt(lengthBuf)
+					length := utils.BytesToInt(lengthBuf)
 					buf := make([]byte, length)
 					_, err2 := io.ReadFull(conn, buf)
 					if err1 != nil || err2 != nil {
@@ -67,12 +66,4 @@ func MakeReceiveChannel(port string) chan *protobuf.Message {
 		}
 	}()
 	return receiveChannel
-}
-
-//BytesToInt convert bytes to int
-func BytesToInt(byt []byte) int {
-	bytebuff := bytes.NewBuffer(byt)
-	var data uint32
-	binary.Read(bytebuff, binary.BigEndian, &data)
-	return int(data)
 }

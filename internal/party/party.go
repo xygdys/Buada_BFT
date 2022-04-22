@@ -94,10 +94,10 @@ func (p *HonestParty) GetMessage(sender uint32, messageType string, ID []byte) (
 		log.Fatalln("This party hasn't been initialized")
 		return nil, false
 	}
-	channel, ok := core.GetDispatcheChannel(messageType, ID, p.dispatcheChannels[sender])
-	if ok {
-		m := <-channel
-		return m, true
+	channel, ok1 := core.GetDispatcheChannel(messageType, ID, p.dispatcheChannels[sender])
+	if ok1 {
+		m, ok2 := <-channel
+		return m, ok2 //return nil, false if channel is closed
 	}
 	return nil, false
 }

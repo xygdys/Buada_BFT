@@ -33,6 +33,7 @@ func MakeDispatcheChannels(receiveChannel chan *protobuf.Message, N uint32) []*s
 					channel = make(chan *protobuf.Message, 1)
 					tmpMap.Store(string(m.Id), channel)
 					channel <- m
+					close(channel) //make sure every message can only read once
 				} else { //m.sender reply message (m.Type, m.Id, *)
 					//reply attack
 					//drop this message

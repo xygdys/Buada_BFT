@@ -2,8 +2,7 @@ package core
 
 import (
 	"Buada_BFT/pkg/protobuf"
-	"bytes"
-	"encoding/binary"
+	"Buada_BFT/pkg/utils"
 	"log"
 	"net"
 
@@ -45,7 +44,7 @@ func MakeSendChannel(hostIP string, hostPort string) chan *protobuf.Message {
 			}
 			//Send bytes
 			length := len(byt)
-			_, err2 := conn.Write(IntToBytes(length))
+			_, err2 := conn.Write(utils.IntToBytes(length))
 			_, err3 := conn.Write(byt)
 			if err2 != nil || err3 != nil {
 				log.Fatalln("The send channel has bread down!", err2)
@@ -54,12 +53,4 @@ func MakeSendChannel(hostIP string, hostPort string) chan *protobuf.Message {
 	}(conn, sendChannel)
 
 	return sendChannel
-}
-
-//IntToBytes convert int to bytes
-func IntToBytes(n int) []byte {
-	data := uint32(n)
-	bytebuf := bytes.NewBuffer([]byte{})
-	binary.Write(bytebuf, binary.BigEndian, data)
-	return bytebuf.Bytes()
 }
