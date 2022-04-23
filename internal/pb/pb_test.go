@@ -3,6 +3,7 @@ package pb
 import (
 	"Buada_BFT/internal/party"
 	"bytes"
+	"context"
 	"fmt"
 	"testing"
 
@@ -12,6 +13,8 @@ import (
 )
 
 func TestPb(t *testing.T) {
+	ctx, _ := context.WithCancel(context.Background())
+
 	ipList := []string{"127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1"}
 	portList := []string{"8880", "8881", "8882", "8883"}
 
@@ -37,7 +40,7 @@ func TestPb(t *testing.T) {
 	ID := []byte{1, 2}
 
 	go func() {
-		sig := PBSender(p[0], ID, value, validation)
+		sig, _ := Sender(ctx, p[0], ID, value, validation)
 
 		h := sha3.Sum512(value)
 		var buf bytes.Buffer
@@ -52,7 +55,7 @@ func TestPb(t *testing.T) {
 	}()
 
 	for i := uint32(0); i < N; i++ {
-		go PBReceiver(p[i], 0, ID, nil)
+		go Receiver(ctx, p[i], 0, ID, nil)
 	}
 
 	for {

@@ -20,6 +20,10 @@ message Echo{
 }
 
 // smvba
+message Lock{
+  bytes value = 1;
+  bytes signature = 2;
+}
 message Finish{
   bytes value = 1;
   bytes signature = 2;
@@ -32,8 +36,11 @@ message Halt{//Halt:=<Finish> of the round-leader
   bytes signature = 2;
 }
 message PreVote{
-  bytes sigshare = 1 ;
+  bool vote = 1;
+  bytes value = 2;
+  bytes signature = 3;
 }
 message Vote{
-  bytes sigshare = 1 ;
+  bool vote = 1;
+  bytes sigshare = 2 ;
 }
