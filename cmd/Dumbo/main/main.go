@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"time"
 )
 
 func main() {
@@ -16,56 +15,35 @@ func main() {
 	// 	fmt.Println("sender==", m.Sender)
 	// 	fmt.Println("len==", len(m.Data))
 	// }
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx1, cancel1 := context.WithCancel(context.Background())
+	ctx2, _ := context.WithCancel(ctx1)
 
-	go func() {
-		//ctx1, cancel1 := context.WithCancel(ctx)
+	go func(ctx context.Context) {
+		select {
+		case <-ctx.Done():
+			return
+		}
 
-		go func() {
-			for {
-				select {
-				case <-ctx.Done():
-					fmt.Println("gorutine 11 stop")
-					return
-				}
-			}
-		}()
-
+	}(ctx1)
+	go func(ctx context.Context) {
 		for {
 			select {
 			case <-ctx.Done():
-				fmt.Println("gorutine 1 stop")
+				fmt.Println("Yes")
 				return
 			}
-
 		}
-	}()
+
+	}(ctx2)
 
 	go func() {
-
-		go func() {
-			for {
-				select {
-				case <-ctx.Done():
-					fmt.Println("gorutine 22 stop")
-					return
-				}
-			}
-		}()
-
-		for {
-			select {
-			case <-ctx.Done():
-				fmt.Println("gorutine 2 stop")
-				return
-
-			}
-		}
+		cancel1()
+		return
 
 	}()
 
-	time.Sleep(time.Second * 1)
-	cancel()
-	time.Sleep(time.Second * 1)
+	for {
+
+	}
 
 }
