@@ -17,7 +17,7 @@ import (
 
 //MainProcess is the main process of smvba instances
 func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byte) []byte {
-	haltChannel := make(chan []byte, 1)
+	haltChannel := make(chan []byte, 1) //control all round
 	ctx, cancel := context.WithCancel(context.Background())
 
 	for r := uint32(0); ; r++ {
@@ -29,11 +29,14 @@ func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byt
 		Lr := sync.Map{} //Lock Set
 		Fr := sync.Map{} //Finish Set
 		doneFlagChannel := make(chan bool, 1)
-		leaderChannel1 := make(chan uint32, 1) //for message handler
-		leaderChannel2 := make(chan uint32, 1) //for main process
-		voteFlagChannel := make(chan bool, 1)  //Yes or No
-		voteYesChannel := make(chan []byte, 3)
-		voteNoChannel := make(chan []byte, 2)
+		leaderChannel := make(chan uint32, 1)    //for main progress
+		preVoteFlagChannel := make(chan bool, 1) //Yes or No
+		preVoteYesChannel := make(chan []byte, 3)
+		preVoteNoChannel := make(chan []byte, 2)
+		voteFlagChannel := make(chan byte, 1)
+		voteYesChannel := make(chan []byte, 2)
+		voteNoChannel := make(chan []byte, 1)
+		voteOtherChannel := make(chan []byte, 1)
 
 		//TODO: CheckValue
 
@@ -69,23 +72,30 @@ func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byt
 				p.Broadcast(finishMessage)
 			}
 			wg.Done()
+
 		}()
 
 		//Run Message Handlers
-		go messageHandler(ctx, p, IDr, IDrj, &Fr, doneFlagChannel, voteFlagChannel, voteYesChannel, voteNoChannel, leaderChannel1, haltChannel)
+		go messageHandler(ctx, p, IDr, IDrj, &Fr,
+			doneFlagChannel,
+			preVoteFlagChannel, preVoteYesChannel, preVoteNoChannel,
+			voteFlagChannel, voteYesChannel, voteNoChannel, voteOtherChannel,
+			leaderChannel, haltChannel)
 
 		//doneFlag -> common coin
-		go election(ctx, p, IDr, doneFlagChannel, leaderChannel1, leaderChannel2)
+		go election(ctx, p, IDr, doneFlagChannel)
 
-		//Short-cut or Prevote
+		//leaderChannel -> shortcut -> prevote||vote||viewchange
 		select {
 		case result := <-haltChannel:
-			spbCancel() //???
+			spbCancel()
 			cancel()
 			return result
-		case l := <-leaderChannel2:
-			spbCancel() //shut down all SPB instances
-			wg.Wait()   //wait for all SPB instances to shut donw
+		case l := <-leaderChannel:
+			spbCancel()
+			wg.Wait()
+
+			//short-cut
 			value1, ok1 := Fr.Load(l)
 			if ok1 {
 				finish := value1.(*protobuf.Finish)
@@ -95,66 +105,50 @@ func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byt
 				})
 				p.Broadcast(haltMessage)
 				cancel()
-				return finish.Value //short-cut
+				return finish.Value
 			}
-			value2, ok2 := Lr.Load(l)
-			if ok2 {
-				lock := value2.(*protobuf.Lock)
-				preVoteMessage := core.Encapsulation("PreVote", IDr, p.PID, &protobuf.PreVote{
-					Vote:  true,
-					Value: lock.Value,
-					Sig:   lock.Sig,
-				})
-				p.Broadcast(preVoteMessage)
-			} else {
-				var buf bytes.Buffer
-				buf.WriteByte(byte(0)) //false
-				buf.Write(IDr)
-				sm := buf.Bytes()
-				sigShare, _ := tbls.Sign(pairing.NewSuiteBn256(), p.SigSK, sm) //sign(false||ID||r)
-				preVoteMessage := core.Encapsulation("PreVote", IDr, p.PID, &protobuf.PreVote{
-					Vote:  false,
-					Value: nil,
-					Sig:   sigShare,
-				})
-				p.Broadcast(preVoteMessage)
-			}
-			//Vote
+
+			//preVote
+			go preVote(ctx, p, IDr, l, &Lr)
+
+			//vote
+			go vote(ctx, p, IDr, l, preVoteFlagChannel, preVoteYesChannel, preVoteNoChannel)
+
+			//result
 			select {
 			case result := <-haltChannel:
 				cancel()
 				return result
-			case VoteFlag := <-voteFlagChannel:
-				if VoteFlag { //have received a valid Yes PreVote
+			case flag := <-voteFlagChannel:
+				if flag == 0 { //Yes
 					value := <-voteYesChannel
 					sig := <-voteYesChannel
-					sigShare := <-voteYesChannel
-					voteMessage := core.Encapsulation("Vote", IDr, p.PID, &protobuf.Vote{
-						Vote:     true,
-						Value:    value,
-						Sig:      sig,
-						Sigshare: sigShare,
+					haltMessage := core.Encapsulation("Halt", IDr, p.PID, &protobuf.Halt{
+						Value: value,
+						Sig:   sig,
 					})
-					p.Broadcast(voteMessage)
-				} else { //have received 2f+1 valid No PreVote
+					p.Broadcast(haltMessage)
+					cancel()
+					return value
+				} else if flag == 1 { //No
 					sig := <-voteNoChannel
-					sigShare := <-voteNoChannel
-					voteMessage := core.Encapsulation("Vote", IDr, p.PID, &protobuf.Vote{
-						Vote:     false,
-						Value:    nil,
-						Sig:      sig,
-						Sigshare: sigShare,
-					})
-					p.Broadcast(voteMessage)
+					validation = append(validation, sig...)
+				} else {
+					//overwrite
+					value = <-voteOtherChannel
+					validation = <-voteOtherChannel
 				}
 			}
-
 		}
-
 	}
 }
 
-func messageHandler(ctx context.Context, p *party.HonestParty, IDr []byte, IDrj [][]byte, Fr *sync.Map, doneFlagChannel chan bool, voteFlagChannel chan bool, voteYesChannel chan []byte, voteNoChannel chan []byte, leaderChannel chan uint32, haltChannel chan []byte) {
+func messageHandler(ctx context.Context, p *party.HonestParty, IDr []byte, IDrj [][]byte, Fr *sync.Map,
+	doneFlagChannel chan bool,
+	preVoteFlagChannel chan bool, preVoteYesChannel chan []byte, preVoteNoChannel chan []byte,
+	voteFlagChannel chan byte, voteYesChannel chan []byte, voteNoChannel chan []byte, voteOtherChannel chan []byte,
+	leaderChannel chan uint32, haltChannel chan []byte) {
+
 	//FinishMessage Handler
 	go func() {
 		FrLength := 0
@@ -188,28 +182,70 @@ func messageHandler(ctx context.Context, p *party.HonestParty, IDr []byte, IDrj 
 		}
 	}()
 
-	l := <-leaderChannel
+	thisRoundLeader := make(chan uint32, 1)
+
+	go func() {
+		var buf bytes.Buffer
+		buf.Write([]byte("Done"))
+		buf.Write(IDr)
+		coinName := buf.Bytes()
+		coins := [][]byte{}
+		for j := uint32(0); j < p.N; j = (j + 1) % p.N {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				m, ok := p.GetMessage(j, "Done", IDr)
+				if !ok {
+					continue
+				}
+				payload := core.Decapsulation("Done", m).(*protobuf.Done)
+				err := tbls.Verify(pairing.NewSuiteBn256(), p.SigPK, coinName, payload.CoinShare) //verifyshare("Done"||ID||r)
+
+				if err == nil {
+					coins = append(coins, payload.CoinShare)
+					if len(coins) > int(p.F) {
+						doneFlagChannel <- true
+					}
+					if len(coins) > int(2*p.F) {
+						coin, _ := tbls.Recover(pairing.NewSuiteBn256(), p.SigPK, coinName, coins, int(2*p.F+1), int(p.N))
+						l := utils.BytesToUint32(coin) % p.N //leader of round r
+						thisRoundLeader <- l                 //for message handler
+						leaderChannel <- l                   //for main process
+						return
+					}
+				}
+			}
+
+		}
+	}()
+
+	l := <-thisRoundLeader
 
 	//HaltMessage Handler
 	go func() {
-
 		for j := uint32(0); j < p.N; j = (j + 1) % p.N {
-			m, ok := p.GetMessage(j, "Halt", IDr)
-			if ok {
-				payload := core.Decapsulation("Halt", m).(*protobuf.Halt)
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				m, ok := p.GetMessage(j, "Halt", IDr)
+				if ok {
+					payload := core.Decapsulation("Halt", m).(*protobuf.Halt)
 
-				h := sha3.Sum512(payload.Value)
-				var buf bytes.Buffer
-				buf.Write([]byte("Echo"))
-				buf.Write(IDrj[l])
-				buf.WriteByte(2)
-				buf.Write(h[:])
-				sm := buf.Bytes()
-				err := bls.Verify(pairing.NewSuiteBn256(), p.SigPK.Commit(), sm, payload.Sig) //verify("Echo"||ID||r||l||2||h)
-				if err == nil {
-					haltChannel <- payload.Value //TODO:how to halt?
+					h := sha3.Sum512(payload.Value)
+					var buf bytes.Buffer
+					buf.Write([]byte("Echo"))
+					buf.Write(IDrj[l])
+					buf.WriteByte(2)
+					buf.Write(h[:])
+					sm := buf.Bytes()
+					err := bls.Verify(pairing.NewSuiteBn256(), p.SigPK.Commit(), sm, payload.Sig) //verify("Echo"||ID||r||l||2||h)
+					if err == nil {
+						haltChannel <- payload.Value
+					}
+
 				}
-
 			}
 		}
 
@@ -218,8 +254,11 @@ func messageHandler(ctx context.Context, p *party.HonestParty, IDr []byte, IDrj 
 	//PreVoteMessage Handler
 	go func() {
 		PNr := [][]byte{}
-		for {
-			for j := uint32(0); j < p.N; j++ {
+		for j := uint32(0); j < p.N; j = (j + 1) % p.N {
+			select {
+			case <-ctx.Done():
+				return
+			default:
 				m, ok := p.GetMessage(j, "PreVote", IDr)
 				if ok {
 					payload := core.Decapsulation("PreVote", m).(*protobuf.PreVote)
@@ -235,10 +274,10 @@ func messageHandler(ctx context.Context, p *party.HonestParty, IDr []byte, IDrj 
 						if err == nil {
 							sm[len([]byte("Echo"))+len(IDrj[l])] = 2
 							sigShare, _ := tbls.Sign(pairing.NewSuiteBn256(), p.SigSK, sm) //sign("Echo"||ID||r||l||2||h)
-							voteFlagChannel <- true
-							voteYesChannel <- payload.Value
-							voteYesChannel <- payload.Sig
-							voteYesChannel <- sigShare
+							preVoteFlagChannel <- true
+							preVoteYesChannel <- payload.Value
+							preVoteYesChannel <- payload.Sig
+							preVoteYesChannel <- sigShare
 						}
 					} else {
 						var buf bytes.Buffer
@@ -255,15 +294,79 @@ func messageHandler(ctx context.Context, p *party.HonestParty, IDr []byte, IDrj 
 								buf.Write(IDr)
 								sm := buf.Bytes()
 								sigShare, _ := tbls.Sign(pairing.NewSuiteBn256(), p.SigSK, sm) //sign("Unlock"||ID||r)
-								voteFlagChannel <- false
-								voteNoChannel <- noSignature
-								voteNoChannel <- sigShare
+								preVoteFlagChannel <- false
+								preVoteNoChannel <- noSignature
+								preVoteNoChannel <- sigShare
 							}
 						}
 					}
-
 				}
 			}
 		}
+
+	}()
+
+	//VoteMessage Handler
+	go func() {
+		VYr := [][]byte{}
+		VNr := [][]byte{}
+		for j := uint32(0); j < p.N; j = (j + 1) % p.N {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				m, ok := p.GetMessage(j, "Vote", IDr)
+				if ok {
+					payload := core.Decapsulation("Vote", m).(*protobuf.Vote)
+					if payload.Vote {
+						h := sha3.Sum512(payload.Value)
+						var buf bytes.Buffer
+						buf.Write([]byte("Echo"))
+						buf.Write(IDrj[l])
+						buf.WriteByte(1)
+						buf.Write(h[:])
+						sm := buf.Bytes()
+						err1 := bls.Verify(pairing.NewSuiteBn256(), p.SigPK.Commit(), sm, payload.Sig) //verify("Echo"||ID||r||l||1||h)
+						sm[len([]byte("Echo"))+len(IDrj[l])] = 2
+						err2 := tbls.Verify(pairing.NewSuiteBn256(), p.SigPK, sm, payload.Sigshare) //verifyShare("Echo"||ID||r||l||2||h)
+						if err1 == nil && err2 == nil {
+							VYr = append(VYr, payload.Sigshare)
+							if len(VYr) > int(2*p.F) {
+								sig, _ := tbls.Recover(pairing.NewSuiteBn256(), p.SigPK, sm, VYr, int(2*p.F+1), int(p.N))
+								voteFlagChannel <- 0
+								voteYesChannel <- payload.Value
+								voteYesChannel <- sig
+							} else if len(VYr)+len(VNr) > int(2*p.F) {
+								voteFlagChannel <- 2
+								voteOtherChannel <- payload.Value
+								voteOtherChannel <- payload.Sig
+							}
+						}
+					} else {
+						var buf1 bytes.Buffer
+						buf1.WriteByte(byte(0)) //false
+						buf1.Write(IDr)
+						sm1 := buf1.Bytes()
+						err1 := bls.Verify(pairing.NewSuiteBn256(), p.SigPK.Commit(), sm1, payload.Sig) //verify(false||ID||r)
+
+						var buf2 bytes.Buffer
+						buf2.Reset()
+						buf2.Write([]byte("Unlock"))
+						buf2.Write(IDr)
+						sm2 := buf2.Bytes()
+						err2 := tbls.Verify(pairing.NewSuiteBn256(), p.SigPK, sm2, payload.Sigshare) //verifyShare("Unlock"||ID||r)
+						if err1 == nil && err2 == nil {
+							VNr = append(VNr, payload.Sigshare)
+							if len(VNr) > int(2*p.F) {
+								sig, _ := tbls.Recover(pairing.NewSuiteBn256(), p.SigPK, sm2, VYr, int(2*p.F+1), int(p.N))
+								voteFlagChannel <- 1
+								voteNoChannel <- sig
+							}
+						}
+					}
+				}
+			}
+		}
+
 	}()
 }
