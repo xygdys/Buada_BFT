@@ -30,15 +30,12 @@ func Sender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, 
 	buf.Write(h[:])
 	sm := buf.Bytes()
 
-	for i := uint32(0); ; i = (i + 1) % p.N {
+	for {
 		select {
 		case <-ctx.Done():
 			return nil, false
-		default:
-			m, ok := p.GetMessage(i, "Echo", ID)
-			if !ok {
-				continue
-			}
+		case m := <-p.GetMessage("Echo", ID):
+
 			payload := core.Decapsulation("Echo", m).(*protobuf.Echo)
 			err := tbls.Verify(pairing.NewSuiteBn256(), p.SigPK, sm, payload.Sigshare) //verifyshare("Echo"||ID||h)
 
@@ -56,39 +53,36 @@ func Sender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, 
 
 //Receiver is run by the receiver of a instance of provable broadcast
 func Receiver(ctx context.Context, p *party.HonestParty, sender uint32, ID []byte, validator func(*party.HonestParty, []byte, uint32, []byte, []byte) error) ([]byte, []byte, bool) {
-	var m *protobuf.Message
-	var ok bool
-	for {
-		select {
-		case <-ctx.Done():
-			return nil, nil, false
-		default:
-			m, ok = p.GetMessage(sender, "Value", ID)
-			if ok {
-				payload := (core.Decapsulation("Value", m)).(*protobuf.Value)
-				if validator != nil {
-					err2 := validator(p, ID, sender, payload.Value, payload.Validation)
-					if err2 != nil {
-						log.Fatalln(err2)
-						return nil, nil, false
-					}
-				}
+	select {
+	case <-ctx.Done():
+		return nil, nil, false
+	case m := <-p.GetMessage("Value", ID):
+		//TODO:check sender == m.Sender
 
-				h := sha3.Sum512(payload.Value)
-				var buf bytes.Buffer
-				buf.Write([]byte("Echo"))
-				buf.Write(ID)
-				buf.Write(h[:])
-				sm := buf.Bytes()
-				sigShare, _ := tbls.Sign(pairing.NewSuiteBn256(), p.SigSK, sm) //sign("Echo"||ID||h)
-
-				echoMessage := core.Encapsulation("Echo", ID, p.PID, &protobuf.Echo{
-					Sigshare: sigShare,
-				})
-				p.Send(echoMessage, sender)
-
-				return payload.Value, payload.Validation, true
+		payload := (core.Decapsulation("Value", m)).(*protobuf.Value)
+		if validator != nil {
+			err2 := validator(p, ID, sender, payload.Value, payload.Validation)
+			if err2 != nil {
+				log.Fatalln(err2)
+				return nil, nil, false //sender is dishonest
 			}
 		}
+
+		h := sha3.Sum512(payload.Value)
+		var buf bytes.Buffer
+		buf.Write([]byte("Echo"))
+		buf.Write(ID)
+		buf.Write(h[:])
+		sm := buf.Bytes()
+		sigShare, _ := tbls.Sign(pairing.NewSuiteBn256(), p.SigSK, sm) //sign("Echo"||ID||h)
+
+		echoMessage := core.Encapsulation("Echo", ID, p.PID, &protobuf.Echo{
+			Sigshare: sigShare,
+		})
+		p.Send(echoMessage, sender)
+
+		return payload.Value, payload.Validation, true
+
 	}
+
 }

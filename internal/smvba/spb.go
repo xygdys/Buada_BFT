@@ -28,6 +28,7 @@ func SPBSender(ctx context.Context, p *party.HonestParty, ID []byte, value []byt
 			return value, sig2, true //FINISH
 		}
 	}
+
 	return nil, nil, false
 
 }

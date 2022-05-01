@@ -4,7 +4,6 @@ import (
 	"Buada_BFT/pkg/core"
 	"Buada_BFT/pkg/protobuf"
 	"errors"
-	"log"
 	"sync"
 
 	"go.dedis.ch/kyber/v3/share"
@@ -25,7 +24,7 @@ type HonestParty struct {
 	ipList            []string
 	portList          []string
 	sendChannels      []chan *protobuf.Message
-	dispatcheChannels [](*sync.Map)
+	dispatcheChannels *sync.Map
 
 	SigPK *share.PubPoly  //tss pk
 	SigSK *share.PriShare //tss sk
@@ -88,18 +87,13 @@ func (p *HonestParty) Broadcast(m *protobuf.Message) error {
 	return nil
 }
 
-//GetMessage Try to get a message according to senderID, messageType, ID
-func (p *HonestParty) GetMessage(sender uint32, messageType string, ID []byte) (*protobuf.Message, bool) {
-	if !p.checkInit() {
-		log.Fatalln("This party hasn't been initialized")
-		return nil, false
-	}
-	channel, ok1 := core.GetDispatcheChannel(messageType, ID, p.dispatcheChannels[sender])
-	if ok1 {
-		m, ok2 := <-channel
-		return m, ok2 //return nil, false if channel is closed
-	}
-	return nil, false
+//GetMessage Try to get a message according to messageType, ID
+func (p *HonestParty) GetMessage(messageType string, ID []byte) chan *protobuf.Message {
+	value1, _ := p.dispatcheChannels.LoadOrStore(messageType, new(sync.Map))
+
+	value2, _ := value1.(*sync.Map).LoadOrStore(string(ID), make(chan *protobuf.Message, p.N))
+
+	return value2.(chan *protobuf.Message)
 }
 
 func (p *HonestParty) checkInit() bool {

@@ -1,14 +1,14 @@
-package main
+package smvba
 
 import (
 	"Buada_BFT/internal/party"
-	"Buada_BFT/internal/smvba"
+	"Buada_BFT/pkg/utils"
 	"fmt"
 	"sync"
-	"time"
+	"testing"
 )
 
-func main() {
+func TestMainProcess(t *testing.T) {
 	ipList := []string{"127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1"}
 	portList := []string{"8880", "8881", "8882", "8883"}
 
@@ -28,27 +28,39 @@ func main() {
 	for i := uint32(0); i < N; i++ {
 		p[i].InitSendChannel()
 	}
-	for k := 0; k < 10; k++ {
-		var wg sync.WaitGroup
 
-		ID := []byte{byte(k)}
+	testNum := 200
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+	result := make([][][]byte, testNum)
+
+	for k := 0; k < testNum; k++ {
+		ID := utils.IntToBytes(k)
 		for i := uint32(0); i < N; i++ {
 			wg.Add(1)
 			value := make([]byte, 1)
 			value[0] = byte(i)
 			validation := make([]byte, 1)
 
-			time.Sleep(time.Millisecond * 500)
-			if i == 3 {
-				time.Sleep(time.Millisecond * 100)
-			}
-			go func(i uint32) {
-				result := smvba.MainProcess(p[i], ID, value, validation)
-				fmt.Println("party", i, "decide:", result)
+			go func(i uint32, k int) {
+				ans := MainProcess(p[i], ID, value, validation)
+				fmt.Println("epoch", k, "party", i, "decide:", ans)
+				mu.Lock()
+				result[k] = append(result[k], ans)
+				mu.Unlock()
 				wg.Done()
-			}(i)
+
+			}(i, k)
+
 		}
 
-		wg.Wait()
+	}
+	wg.Wait()
+	for k := 0; k < testNum; k++ {
+		for i := uint32(1); i < N; i++ {
+			if result[k][i][0] != result[k][i-1][0] {
+				t.Error()
+			}
+		}
 	}
 }
