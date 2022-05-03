@@ -1,54 +1,69 @@
 package main
 
 import (
-	"Buada_BFT/internal/party"
-	"Buada_BFT/internal/smvba"
 	"fmt"
-	"sync"
-	"time"
+
+	"github.com/vivint/infectious"
 )
 
 func main() {
-	ipList := []string{"127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1"}
-	portList := []string{"8880", "8881", "8882", "8883"}
+	const (
+		required = 8
+		total    = 14
+	)
 
-	N := uint32(4)
-	F := uint32(1)
-	sk, pk := party.SigKeyGen(N, 2*F+1)
-
-	var p []*party.HonestParty = make([]*party.HonestParty, N)
-	for i := uint32(0); i < N; i++ {
-		p[i] = party.NewHonestParty(N, F, i, ipList, portList, pk, sk[i])
+	// Create a *FEC, which will require required pieces for reconstruction at
+	// minimum, and generate total total pieces.
+	f, err := infectious.NewFEC(required, total)
+	if err != nil {
+		panic(err)
 	}
 
-	for i := uint32(0); i < N; i++ {
-		p[i].InitReceiveChannel()
+	// Prepare to receive the shares of encoded data.
+	shares := make([]infectious.Share, total)
+	output := func(s infectious.Share) {
+		// the memory in s gets reused, so we need to make a deep copy
+		shares[s.Number] = s.DeepCopy()
 	}
 
-	for i := uint32(0); i < N; i++ {
-		p[i].InitSendChannel()
+	// the data to encode must be padded to a multiple of required, hence the
+	// underscores.
+	text := "hello, world! __"
+	err = f.Encode([]byte(text), output)
+	if err != nil {
+		panic(err)
 	}
-	for k := 0; k < 10; k++ {
-		var wg sync.WaitGroup
 
-		ID := []byte{byte(k)}
-		for i := uint32(0); i < N; i++ {
-			wg.Add(1)
-			value := make([]byte, 1)
-			value[0] = byte(i)
-			validation := make([]byte, 1)
-
-			time.Sleep(time.Millisecond * 500)
-			if i == 3 {
-				time.Sleep(time.Millisecond * 100)
-			}
-			go func(i uint32) {
-				result := smvba.MainProcess(p[i], ID, value, validation)
-				fmt.Println("party", i, "decide:", result)
-				wg.Done()
-			}(i)
-		}
-
-		wg.Wait()
+	fmt.Println("----------------")
+	fmt.Println("Generated shares:")
+	// we now have total shares.
+	for _, share := range shares {
+		fmt.Printf("%d: %#v\n", share.Number, string(share.Data))
 	}
+
+	// Let's reconstitute with shares 0-5 missing and 1 piece corrupted.
+	shares = shares[4:]
+	shares[4].Data[0] = '!' // mutate some data
+
+	fmt.Println("----------------")
+	fmt.Println("Fucked shares:")
+	for _, share := range shares {
+		fmt.Printf("%d: %#v\n", share.Number, string(share.Data))
+	}
+
+	err = f.Correct(shares)
+	if err != nil {
+		panic(err)
+	}
+
+	result, err := f.Decode(nil, shares)
+	if err != nil {
+		panic(err)
+	}
+
+	// we have the original data!
+	fmt.Println("----------------")
+	fmt.Println("Fixed shares:")
+	fmt.Printf("original text:  %#v\n", string(text))
+	fmt.Printf("recovered text: %#v\n", string(result))
 }

@@ -1,4 +1,4 @@
-package smvba //strong provable broadcPBt
+package smvba
 
 import (
 	"Buada_BFT/internal/party"
@@ -11,8 +11,8 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-//SPBSender is run by the sender of a instance of strong provable broadcast
-func SPBSender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, validation []byte) ([]byte, []byte, bool) {
+//strong provable broadcast
+func spbSender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, validation []byte) ([]byte, []byte, bool) {
 	var buf1, buf2 bytes.Buffer
 	buf1.Write(ID)
 	buf1.WriteByte(1)
@@ -33,8 +33,7 @@ func SPBSender(ctx context.Context, p *party.HonestParty, ID []byte, value []byt
 
 }
 
-//SPBReceiver is run by the receiver of a instance of strong provable broadcast
-func SPBReceiver(ctx context.Context, p *party.HonestParty, sender uint32, ID []byte) ([]byte, []byte, bool) {
+func spbReceiver(ctx context.Context, p *party.HonestParty, sender uint32, ID []byte) ([]byte, []byte, bool) {
 	var buf1, buf2 bytes.Buffer
 	buf1.Write(ID)
 	buf1.WriteByte(1)

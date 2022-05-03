@@ -3,7 +3,6 @@ package smvba
 import (
 	"Buada_BFT/internal/party"
 	"Buada_BFT/pkg/utils"
-	"fmt"
 	"sync"
 	"testing"
 )
@@ -29,7 +28,7 @@ func TestMainProcess(t *testing.T) {
 		p[i].InitSendChannel()
 	}
 
-	testNum := 200
+	testNum := 100
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 	result := make([][][]byte, testNum)
@@ -38,13 +37,13 @@ func TestMainProcess(t *testing.T) {
 		ID := utils.IntToBytes(k)
 		for i := uint32(0); i < N; i++ {
 			wg.Add(1)
-			value := make([]byte, 1)
+			value := make([]byte, 64*100*100)
 			value[0] = byte(i)
 			validation := make([]byte, 1)
 
 			go func(i uint32, k int) {
 				ans := MainProcess(p[i], ID, value, validation)
-				fmt.Println("epoch", k, "party", i, "decide:", ans)
+				//fmt.Println("epoch", k, "party", i, "decide:", ans)
 				mu.Lock()
 				result[k] = append(result[k], ans)
 				mu.Unlock()

@@ -15,7 +15,7 @@ import (
 
 //MainProcess is the main process of smvba instances
 func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byte) []byte {
-	haltChannel := make(chan []byte, 1) //control all round
+	haltChannel := make(chan []byte, 1024) //control all round
 	ctx, cancel := context.WithCancel(context.Background())
 
 	for r := uint32(0); ; r++ {
@@ -54,7 +54,7 @@ func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byt
 
 		for i := uint32(0); i < p.N; i++ {
 			go func(j uint32) {
-				value, sig, ok := SPBReceiver(spbCtx, p, j, IDrj[j])
+				value, sig, ok := spbReceiver(spbCtx, p, j, IDrj[j])
 				if ok { //save Lock
 					Lr.Store(j, &protobuf.Lock{
 						Value: value,
@@ -67,7 +67,7 @@ func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byt
 
 		//Run this party's SPB instance
 		go func() {
-			value, sig, ok := SPBSender(spbCtx, p, IDrj[p.PID], value, validation)
+			value, sig, ok := spbSender(spbCtx, p, IDrj[p.PID], value, validation)
 			if ok {
 				finishMessage := core.Encapsulation("Finish", IDr, p.PID, &protobuf.Finish{
 					Value: value,
