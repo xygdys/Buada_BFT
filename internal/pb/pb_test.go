@@ -40,7 +40,7 @@ func TestPb(t *testing.T) {
 	ID := []byte{1, 2}
 
 	go func() {
-		sig, _ := Sender(ctx, p[0], ID, value, validation)
+		_, sig, _ := Sender(ctx, p[0], ID, value, validation)
 
 		h := sha3.Sum512(value)
 		var buf bytes.Buffer

@@ -9,6 +9,18 @@ message Message {
   bytes data = 4;
 }
 
+message Final{
+  bytes hash = 1;
+  bytes sig = 2;
+}
+message FinalSetValue{
+  repeated uint32 pid = 1;
+  repeated bytes hash = 2;
+}
+message FinalSetValidation{
+  repeated bytes sig = 1;
+}
+
 
 // provable broadcast
 message Value{
@@ -61,4 +73,18 @@ message Recast{
   bytes shard = 1;
   repeated bytes proof1 = 2;
   repeated int64 proof2 = 3;
+}
+
+//avdd
+message Call{
+  repeated uint32 requiredPID = 1;
+}
+message Strong{
+  repeated  uint32 shardID = 1;
+  repeated  bytes senderShard = 2;
+  repeated  bytes receiverShard = 3;
+}
+message Weak{
+  repeated  uint32 shardID = 1;
+  repeated  bytes senderShard = 2;
 }

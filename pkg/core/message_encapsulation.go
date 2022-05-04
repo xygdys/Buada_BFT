@@ -34,7 +34,16 @@ func Encapsulation(messageType string, ID []byte, sender uint32, payloadMessage 
 		data, err = proto.Marshal((payloadMessage).(*protobuf.Stored))
 	case "Recast":
 		data, err = proto.Marshal((payloadMessage).(*protobuf.Recast))
+	case "Final":
+		data, err = proto.Marshal((payloadMessage).(*protobuf.Final))
+	case "Call":
+		data, err = proto.Marshal((payloadMessage).(*protobuf.Call))
+	case "Weak":
+		data, err = proto.Marshal((payloadMessage).(*protobuf.Weak))
+	case "Strong":
+		data, err = proto.Marshal((payloadMessage).(*protobuf.Strong))
 	}
+
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -91,6 +100,22 @@ func Decapsulation(messageType string, m *protobuf.Message) any {
 		return &payloadMessage
 	case "Recast":
 		var payloadMessage protobuf.Recast
+		proto.Unmarshal(m.Data, &payloadMessage)
+		return &payloadMessage
+	case "Final":
+		var payloadMessage protobuf.Final
+		proto.Unmarshal(m.Data, &payloadMessage)
+		return &payloadMessage
+	case "Call":
+		var payloadMessage protobuf.Call
+		proto.Unmarshal(m.Data, &payloadMessage)
+		return &payloadMessage
+	case "Weak":
+		var payloadMessage protobuf.Weak
+		proto.Unmarshal(m.Data, &payloadMessage)
+		return &payloadMessage
+	case "Strong":
+		var payloadMessage protobuf.Strong
 		proto.Unmarshal(m.Data, &payloadMessage)
 		return &payloadMessage
 	default:

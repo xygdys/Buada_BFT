@@ -18,7 +18,7 @@ func MakeDispatcheChannels(receiveChannel chan *protobuf.Message, N uint32) *syn
 			value2, _ := value1.(*sync.Map).LoadOrStore(string(m.Id), make(chan *protobuf.Message, N))
 
 			value2.(chan *protobuf.Message) <- m
-			//TODO: check reply attack?
+			//TODO: check replay attack?
 			//TODO: check m.Sender with ip||port
 
 		}

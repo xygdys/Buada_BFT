@@ -91,6 +91,163 @@ func (x *Message) GetData() []byte {
 	return nil
 }
 
+type Final struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Hash []byte `protobuf:"bytes,1,opt,name=hash,proto3" json:"hash,omitempty"`
+	Sig  []byte `protobuf:"bytes,2,opt,name=sig,proto3" json:"sig,omitempty"`
+}
+
+func (x *Final) Reset() {
+	*x = Final{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Message_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Final) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Final) ProtoMessage() {}
+
+func (x *Final) ProtoReflect() protoreflect.Message {
+	mi := &file_Message_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Final.ProtoReflect.Descriptor instead.
+func (*Final) Descriptor() ([]byte, []int) {
+	return file_Message_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Final) GetHash() []byte {
+	if x != nil {
+		return x.Hash
+	}
+	return nil
+}
+
+func (x *Final) GetSig() []byte {
+	if x != nil {
+		return x.Sig
+	}
+	return nil
+}
+
+type FinalSetValue struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Pid  []uint32 `protobuf:"varint,1,rep,packed,name=pid,proto3" json:"pid,omitempty"`
+	Hash [][]byte `protobuf:"bytes,2,rep,name=hash,proto3" json:"hash,omitempty"`
+}
+
+func (x *FinalSetValue) Reset() {
+	*x = FinalSetValue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Message_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FinalSetValue) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FinalSetValue) ProtoMessage() {}
+
+func (x *FinalSetValue) ProtoReflect() protoreflect.Message {
+	mi := &file_Message_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FinalSetValue.ProtoReflect.Descriptor instead.
+func (*FinalSetValue) Descriptor() ([]byte, []int) {
+	return file_Message_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *FinalSetValue) GetPid() []uint32 {
+	if x != nil {
+		return x.Pid
+	}
+	return nil
+}
+
+func (x *FinalSetValue) GetHash() [][]byte {
+	if x != nil {
+		return x.Hash
+	}
+	return nil
+}
+
+type FinalSetValidation struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Sig [][]byte `protobuf:"bytes,1,rep,name=sig,proto3" json:"sig,omitempty"`
+}
+
+func (x *FinalSetValidation) Reset() {
+	*x = FinalSetValidation{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Message_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FinalSetValidation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FinalSetValidation) ProtoMessage() {}
+
+func (x *FinalSetValidation) ProtoReflect() protoreflect.Message {
+	mi := &file_Message_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FinalSetValidation.ProtoReflect.Descriptor instead.
+func (*FinalSetValidation) Descriptor() ([]byte, []int) {
+	return file_Message_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *FinalSetValidation) GetSig() [][]byte {
+	if x != nil {
+		return x.Sig
+	}
+	return nil
+}
+
 // provable broadcast
 type Value struct {
 	state         protoimpl.MessageState
@@ -104,7 +261,7 @@ type Value struct {
 func (x *Value) Reset() {
 	*x = Value{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[1]
+		mi := &file_Message_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -117,7 +274,7 @@ func (x *Value) String() string {
 func (*Value) ProtoMessage() {}
 
 func (x *Value) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[1]
+	mi := &file_Message_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -130,7 +287,7 @@ func (x *Value) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Value.ProtoReflect.Descriptor instead.
 func (*Value) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{1}
+	return file_Message_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Value) GetValue() []byte {
@@ -158,7 +315,7 @@ type Echo struct {
 func (x *Echo) Reset() {
 	*x = Echo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[2]
+		mi := &file_Message_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -171,7 +328,7 @@ func (x *Echo) String() string {
 func (*Echo) ProtoMessage() {}
 
 func (x *Echo) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[2]
+	mi := &file_Message_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -184,7 +341,7 @@ func (x *Echo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Echo.ProtoReflect.Descriptor instead.
 func (*Echo) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{2}
+	return file_Message_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Echo) GetSigshare() []byte {
@@ -207,7 +364,7 @@ type Lock struct {
 func (x *Lock) Reset() {
 	*x = Lock{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[3]
+		mi := &file_Message_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -220,7 +377,7 @@ func (x *Lock) String() string {
 func (*Lock) ProtoMessage() {}
 
 func (x *Lock) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[3]
+	mi := &file_Message_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -233,7 +390,7 @@ func (x *Lock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Lock.ProtoReflect.Descriptor instead.
 func (*Lock) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{3}
+	return file_Message_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Lock) GetValue() []byte {
@@ -262,7 +419,7 @@ type Finish struct {
 func (x *Finish) Reset() {
 	*x = Finish{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[4]
+		mi := &file_Message_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -275,7 +432,7 @@ func (x *Finish) String() string {
 func (*Finish) ProtoMessage() {}
 
 func (x *Finish) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[4]
+	mi := &file_Message_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -288,7 +445,7 @@ func (x *Finish) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Finish.ProtoReflect.Descriptor instead.
 func (*Finish) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{4}
+	return file_Message_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Finish) GetValue() []byte {
@@ -316,7 +473,7 @@ type Done struct {
 func (x *Done) Reset() {
 	*x = Done{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[5]
+		mi := &file_Message_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -329,7 +486,7 @@ func (x *Done) String() string {
 func (*Done) ProtoMessage() {}
 
 func (x *Done) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[5]
+	mi := &file_Message_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -342,7 +499,7 @@ func (x *Done) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Done.ProtoReflect.Descriptor instead.
 func (*Done) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{5}
+	return file_Message_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Done) GetCoinShare() []byte {
@@ -364,7 +521,7 @@ type Halt struct {
 func (x *Halt) Reset() {
 	*x = Halt{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[6]
+		mi := &file_Message_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -377,7 +534,7 @@ func (x *Halt) String() string {
 func (*Halt) ProtoMessage() {}
 
 func (x *Halt) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[6]
+	mi := &file_Message_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -390,7 +547,7 @@ func (x *Halt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Halt.ProtoReflect.Descriptor instead.
 func (*Halt) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{6}
+	return file_Message_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Halt) GetValue() []byte {
@@ -420,7 +577,7 @@ type PreVote struct {
 func (x *PreVote) Reset() {
 	*x = PreVote{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[7]
+		mi := &file_Message_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -433,7 +590,7 @@ func (x *PreVote) String() string {
 func (*PreVote) ProtoMessage() {}
 
 func (x *PreVote) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[7]
+	mi := &file_Message_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -446,7 +603,7 @@ func (x *PreVote) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreVote.ProtoReflect.Descriptor instead.
 func (*PreVote) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{7}
+	return file_Message_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *PreVote) GetVote() bool {
@@ -484,7 +641,7 @@ type Vote struct {
 func (x *Vote) Reset() {
 	*x = Vote{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[8]
+		mi := &file_Message_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -497,7 +654,7 @@ func (x *Vote) String() string {
 func (*Vote) ProtoMessage() {}
 
 func (x *Vote) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[8]
+	mi := &file_Message_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -510,7 +667,7 @@ func (x *Vote) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Vote.ProtoReflect.Descriptor instead.
 func (*Vote) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{8}
+	return file_Message_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *Vote) GetVote() bool {
@@ -556,7 +713,7 @@ type Store struct {
 func (x *Store) Reset() {
 	*x = Store{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[9]
+		mi := &file_Message_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -569,7 +726,7 @@ func (x *Store) String() string {
 func (*Store) ProtoMessage() {}
 
 func (x *Store) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[9]
+	mi := &file_Message_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -582,7 +739,7 @@ func (x *Store) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Store.ProtoReflect.Descriptor instead.
 func (*Store) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{9}
+	return file_Message_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Store) GetVc() []byte {
@@ -624,7 +781,7 @@ type Stored struct {
 func (x *Stored) Reset() {
 	*x = Stored{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[10]
+		mi := &file_Message_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -637,7 +794,7 @@ func (x *Stored) String() string {
 func (*Stored) ProtoMessage() {}
 
 func (x *Stored) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[10]
+	mi := &file_Message_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -650,7 +807,7 @@ func (x *Stored) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Stored.ProtoReflect.Descriptor instead.
 func (*Stored) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{10}
+	return file_Message_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Stored) GetSigshare() []byte {
@@ -673,7 +830,7 @@ type Recast struct {
 func (x *Recast) Reset() {
 	*x = Recast{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_Message_proto_msgTypes[11]
+		mi := &file_Message_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -686,7 +843,7 @@ func (x *Recast) String() string {
 func (*Recast) ProtoMessage() {}
 
 func (x *Recast) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[11]
+	mi := &file_Message_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -699,7 +856,7 @@ func (x *Recast) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Recast.ProtoReflect.Descriptor instead.
 func (*Recast) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{11}
+	return file_Message_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Recast) GetShard() []byte {
@@ -723,6 +880,172 @@ func (x *Recast) GetProof2() []int64 {
 	return nil
 }
 
+//avdd
+type Call struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	RequiredPID []uint32 `protobuf:"varint,1,rep,packed,name=requiredPID,proto3" json:"requiredPID,omitempty"`
+}
+
+func (x *Call) Reset() {
+	*x = Call{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Message_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Call) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Call) ProtoMessage() {}
+
+func (x *Call) ProtoReflect() protoreflect.Message {
+	mi := &file_Message_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Call.ProtoReflect.Descriptor instead.
+func (*Call) Descriptor() ([]byte, []int) {
+	return file_Message_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *Call) GetRequiredPID() []uint32 {
+	if x != nil {
+		return x.RequiredPID
+	}
+	return nil
+}
+
+type Strong struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ShardID       []uint32 `protobuf:"varint,1,rep,packed,name=shardID,proto3" json:"shardID,omitempty"`
+	SenderShard   [][]byte `protobuf:"bytes,2,rep,name=senderShard,proto3" json:"senderShard,omitempty"`
+	ReceiverShard [][]byte `protobuf:"bytes,3,rep,name=receiverShard,proto3" json:"receiverShard,omitempty"`
+}
+
+func (x *Strong) Reset() {
+	*x = Strong{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Message_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Strong) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Strong) ProtoMessage() {}
+
+func (x *Strong) ProtoReflect() protoreflect.Message {
+	mi := &file_Message_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Strong.ProtoReflect.Descriptor instead.
+func (*Strong) Descriptor() ([]byte, []int) {
+	return file_Message_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *Strong) GetShardID() []uint32 {
+	if x != nil {
+		return x.ShardID
+	}
+	return nil
+}
+
+func (x *Strong) GetSenderShard() [][]byte {
+	if x != nil {
+		return x.SenderShard
+	}
+	return nil
+}
+
+func (x *Strong) GetReceiverShard() [][]byte {
+	if x != nil {
+		return x.ReceiverShard
+	}
+	return nil
+}
+
+type Weak struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ShardID     []uint32 `protobuf:"varint,1,rep,packed,name=shardID,proto3" json:"shardID,omitempty"`
+	SenderShard [][]byte `protobuf:"bytes,2,rep,name=senderShard,proto3" json:"senderShard,omitempty"`
+}
+
+func (x *Weak) Reset() {
+	*x = Weak{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Message_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Weak) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Weak) ProtoMessage() {}
+
+func (x *Weak) ProtoReflect() protoreflect.Message {
+	mi := &file_Message_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Weak.ProtoReflect.Descriptor instead.
+func (*Weak) Descriptor() ([]byte, []int) {
+	return file_Message_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *Weak) GetShardID() []uint32 {
+	if x != nil {
+		return x.ShardID
+	}
+	return nil
+}
+
+func (x *Weak) GetSenderShard() [][]byte {
+	if x != nil {
+		return x.SenderShard
+	}
+	return nil
+}
+
 var File_Message_proto protoreflect.FileDescriptor
 
 var file_Message_proto_rawDesc = []byte{
@@ -732,50 +1055,72 @@ var file_Message_proto_rawDesc = []byte{
 	0x0a, 0x02, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16,
 	0x0a, 0x06, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x06,
 	0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x04,
-	0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x3d, 0x0a, 0x05, 0x56, 0x61,
-	0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x76, 0x61, 0x6c,
-	0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x0a, 0x76,
-	0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x22, 0x0a, 0x04, 0x45, 0x63, 0x68,
-	0x6f, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x0c, 0x52, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x22, 0x2e, 0x0a,
-	0x04, 0x4c, 0x6f, 0x63, 0x6b, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x2d, 0x0a, 0x05, 0x46, 0x69,
+	0x6e, 0x61, 0x6c, 0x12, 0x12, 0x0a, 0x04, 0x68, 0x61, 0x73, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0c, 0x52, 0x04, 0x68, 0x61, 0x73, 0x68, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x67, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x35, 0x0a, 0x0d, 0x46, 0x69, 0x6e,
+	0x61, 0x6c, 0x53, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x70, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x03, 0x70, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04,
+	0x68, 0x61, 0x73, 0x68, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x04, 0x68, 0x61, 0x73, 0x68,
+	0x22, 0x26, 0x0a, 0x12, 0x46, 0x69, 0x6e, 0x61, 0x6c, 0x53, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x69,
+	0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x67, 0x18, 0x01, 0x20,
+	0x03, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x3d, 0x0a, 0x05, 0x56, 0x61, 0x6c, 0x75,
+	0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c,
+	0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x76, 0x61, 0x6c, 0x69, 0x64,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x0a, 0x76, 0x61, 0x6c,
+	0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x22, 0x0a, 0x04, 0x45, 0x63, 0x68, 0x6f, 0x12,
+	0x1a, 0x0a, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0c, 0x52, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x22, 0x2e, 0x0a, 0x04, 0x4c,
+	0x6f, 0x63, 0x6b, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x67,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x30, 0x0a, 0x06, 0x46,
+	0x69, 0x6e, 0x69, 0x73, 0x68, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x73,
-	0x69, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x30, 0x0a,
-	0x06, 0x46, 0x69, 0x6e, 0x69, 0x73, 0x68, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a,
-	0x03, 0x73, 0x69, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22,
-	0x24, 0x0a, 0x04, 0x44, 0x6f, 0x6e, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6f, 0x69, 0x6e, 0x53,
-	0x68, 0x61, 0x72, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x09, 0x63, 0x6f, 0x69, 0x6e,
-	0x53, 0x68, 0x61, 0x72, 0x65, 0x22, 0x2e, 0x0a, 0x04, 0x48, 0x61, 0x6c, 0x74, 0x12, 0x14, 0x0a,
-	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61,
-	0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c,
-	0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x45, 0x0a, 0x07, 0x50, 0x72, 0x65, 0x56, 0x6f, 0x74, 0x65,
-	0x12, 0x12, 0x0a, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x04,
-	0x76, 0x6f, 0x74, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69,
-	0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x5e, 0x0a, 0x04,
-	0x56, 0x6f, 0x74, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x08, 0x52, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75,
-	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10,
-	0x0a, 0x03, 0x73, 0x69, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67,
-	0x12, 0x1a, 0x0a, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x18, 0x04, 0x20, 0x01,
-	0x28, 0x0c, 0x52, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x22, 0x5d, 0x0a, 0x05,
-	0x53, 0x74, 0x6f, 0x72, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x76, 0x63, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0c, 0x52, 0x02, 0x76, 0x63, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x68, 0x61, 0x72, 0x64, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x73, 0x68, 0x61, 0x72, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x70,
-	0x72, 0x6f, 0x6f, 0x66, 0x31, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x70, 0x72, 0x6f,
-	0x6f, 0x66, 0x31, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x32, 0x18, 0x04, 0x20,
-	0x03, 0x28, 0x03, 0x52, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x32, 0x22, 0x24, 0x0a, 0x06, 0x53,
-	0x74, 0x6f, 0x72, 0x65, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72,
-	0x65, 0x22, 0x4e, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x61, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x73,
-	0x68, 0x61, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x73, 0x68, 0x61, 0x72,
-	0x64, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x31, 0x18, 0x02, 0x20, 0x03, 0x28,
-	0x0c, 0x52, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x31, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x6f,
-	0x6f, 0x66, 0x32, 0x18, 0x03, 0x20, 0x03, 0x28, 0x03, 0x52, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66,
-	0x32, 0x42, 0x0b, 0x5a, 0x09, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x24, 0x0a,
+	0x04, 0x44, 0x6f, 0x6e, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6f, 0x69, 0x6e, 0x53, 0x68, 0x61,
+	0x72, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x09, 0x63, 0x6f, 0x69, 0x6e, 0x53, 0x68,
+	0x61, 0x72, 0x65, 0x22, 0x2e, 0x0a, 0x04, 0x48, 0x61, 0x6c, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03,
+	0x73, 0x69, 0x67, 0x22, 0x45, 0x0a, 0x07, 0x50, 0x72, 0x65, 0x56, 0x6f, 0x74, 0x65, 0x12, 0x12,
+	0x0a, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x04, 0x76, 0x6f,
+	0x74, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x67, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x22, 0x5e, 0x0a, 0x04, 0x56, 0x6f,
+	0x74, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08,
+	0x52, 0x04, 0x76, 0x6f, 0x74, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03,
+	0x73, 0x69, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x73, 0x69, 0x67, 0x12, 0x1a,
+	0x0a, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0c,
+	0x52, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x22, 0x5d, 0x0a, 0x05, 0x53, 0x74,
+	0x6f, 0x72, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x76, 0x63, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x02, 0x76, 0x63, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x68, 0x61, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0c, 0x52, 0x05, 0x73, 0x68, 0x61, 0x72, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x6f,
+	0x6f, 0x66, 0x31, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66,
+	0x31, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x32, 0x18, 0x04, 0x20, 0x03, 0x28,
+	0x03, 0x52, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x32, 0x22, 0x24, 0x0a, 0x06, 0x53, 0x74, 0x6f,
+	0x72, 0x65, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x08, 0x73, 0x69, 0x67, 0x73, 0x68, 0x61, 0x72, 0x65, 0x22,
+	0x4e, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x61, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x68, 0x61,
+	0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x73, 0x68, 0x61, 0x72, 0x64, 0x12,
+	0x16, 0x0a, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x31, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52,
+	0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x31, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66,
+	0x32, 0x18, 0x03, 0x20, 0x03, 0x28, 0x03, 0x52, 0x06, 0x70, 0x72, 0x6f, 0x6f, 0x66, 0x32, 0x22,
+	0x28, 0x0a, 0x04, 0x43, 0x61, 0x6c, 0x6c, 0x12, 0x20, 0x0a, 0x0b, 0x72, 0x65, 0x71, 0x75, 0x69,
+	0x72, 0x65, 0x64, 0x50, 0x49, 0x44, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x0b, 0x72, 0x65,
+	0x71, 0x75, 0x69, 0x72, 0x65, 0x64, 0x50, 0x49, 0x44, 0x22, 0x6a, 0x0a, 0x06, 0x53, 0x74, 0x72,
+	0x6f, 0x6e, 0x67, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x44, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0d, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x44, 0x12, 0x20, 0x0a,
+	0x0b, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x53, 0x68, 0x61, 0x72, 0x64, 0x18, 0x02, 0x20, 0x03,
+	0x28, 0x0c, 0x52, 0x0b, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x53, 0x68, 0x61, 0x72, 0x64, 0x12,
+	0x24, 0x0a, 0x0d, 0x72, 0x65, 0x63, 0x65, 0x69, 0x76, 0x65, 0x72, 0x53, 0x68, 0x61, 0x72, 0x64,
+	0x18, 0x03, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x0d, 0x72, 0x65, 0x63, 0x65, 0x69, 0x76, 0x65, 0x72,
+	0x53, 0x68, 0x61, 0x72, 0x64, 0x22, 0x42, 0x0a, 0x04, 0x57, 0x65, 0x61, 0x6b, 0x12, 0x18, 0x0a,
+	0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x44, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x07,
+	0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x44, 0x12, 0x20, 0x0a, 0x0b, 0x73, 0x65, 0x6e, 0x64, 0x65,
+	0x72, 0x53, 0x68, 0x61, 0x72, 0x64, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x0b, 0x73, 0x65,
+	0x6e, 0x64, 0x65, 0x72, 0x53, 0x68, 0x61, 0x72, 0x64, 0x42, 0x0b, 0x5a, 0x09, 0x2f, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -790,20 +1135,26 @@ func file_Message_proto_rawDescGZIP() []byte {
 	return file_Message_proto_rawDescData
 }
 
-var file_Message_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_Message_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_Message_proto_goTypes = []interface{}{
-	(*Message)(nil), // 0: Message
-	(*Value)(nil),   // 1: Value
-	(*Echo)(nil),    // 2: Echo
-	(*Lock)(nil),    // 3: Lock
-	(*Finish)(nil),  // 4: Finish
-	(*Done)(nil),    // 5: Done
-	(*Halt)(nil),    // 6: Halt
-	(*PreVote)(nil), // 7: PreVote
-	(*Vote)(nil),    // 8: Vote
-	(*Store)(nil),   // 9: Store
-	(*Stored)(nil),  // 10: Stored
-	(*Recast)(nil),  // 11: Recast
+	(*Message)(nil),            // 0: Message
+	(*Final)(nil),              // 1: Final
+	(*FinalSetValue)(nil),      // 2: FinalSetValue
+	(*FinalSetValidation)(nil), // 3: FinalSetValidation
+	(*Value)(nil),              // 4: Value
+	(*Echo)(nil),               // 5: Echo
+	(*Lock)(nil),               // 6: Lock
+	(*Finish)(nil),             // 7: Finish
+	(*Done)(nil),               // 8: Done
+	(*Halt)(nil),               // 9: Halt
+	(*PreVote)(nil),            // 10: PreVote
+	(*Vote)(nil),               // 11: Vote
+	(*Store)(nil),              // 12: Store
+	(*Stored)(nil),             // 13: Stored
+	(*Recast)(nil),             // 14: Recast
+	(*Call)(nil),               // 15: Call
+	(*Strong)(nil),             // 16: Strong
+	(*Weak)(nil),               // 17: Weak
 }
 var file_Message_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -832,7 +1183,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Value); i {
+			switch v := v.(*Final); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -844,7 +1195,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Echo); i {
+			switch v := v.(*FinalSetValue); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -856,7 +1207,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Lock); i {
+			switch v := v.(*FinalSetValidation); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -868,7 +1219,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Finish); i {
+			switch v := v.(*Value); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -880,7 +1231,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Done); i {
+			switch v := v.(*Echo); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -892,7 +1243,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Halt); i {
+			switch v := v.(*Lock); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -904,7 +1255,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PreVote); i {
+			switch v := v.(*Finish); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -916,7 +1267,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Vote); i {
+			switch v := v.(*Done); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -928,7 +1279,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Store); i {
+			switch v := v.(*Halt); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -940,7 +1291,7 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Stored); i {
+			switch v := v.(*PreVote); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -952,7 +1303,79 @@ func file_Message_proto_init() {
 			}
 		}
 		file_Message_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Vote); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_Message_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Store); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_Message_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Stored); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_Message_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Recast); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_Message_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Call); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_Message_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Strong); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_Message_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Weak); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -970,7 +1393,7 @@ func file_Message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_Message_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

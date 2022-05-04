@@ -14,7 +14,7 @@ import (
 )
 
 //Sender is run by the sender of a instance of provable broadcast
-func Sender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, validation []byte) ([]byte, bool) {
+func Sender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, validation []byte) ([]byte, []byte, bool) {
 	valueMessage := core.Encapsulation("Value", ID, p.PID, &protobuf.Value{
 		Value:      value,
 		Validation: validation,
@@ -33,7 +33,7 @@ func Sender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, 
 	for {
 		select {
 		case <-ctx.Done():
-			return nil, false
+			return nil, nil, false
 		case m := <-p.GetMessage("Echo", ID):
 
 			payload := core.Decapsulation("Echo", m).(*protobuf.Echo)
@@ -43,7 +43,7 @@ func Sender(ctx context.Context, p *party.HonestParty, ID []byte, value []byte, 
 				sigs = append(sigs, payload.Sigshare)
 				if len(sigs) > int(2*p.F) {
 					signature, _ := tbls.Recover(pairing.NewSuiteBn256(), p.SigPK, sm, sigs, int(2*p.F+1), int(p.N))
-					return signature, true
+					return h[:], signature, true
 				}
 			}
 		}

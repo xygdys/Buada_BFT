@@ -21,9 +21,9 @@ func spbSender(ctx context.Context, p *party.HonestParty, ID []byte, value []byt
 	ID1 := buf1.Bytes()
 	ID2 := buf2.Bytes()
 
-	sig1, ok1 := pb.Sender(ctx, p, ID1, value, validation)
+	_, sig1, ok1 := pb.Sender(ctx, p, ID1, value, validation)
 	if ok1 {
-		sig2, ok2 := pb.Sender(ctx, p, ID2, value, sig1)
+		_, sig2, ok2 := pb.Sender(ctx, p, ID2, value, sig1)
 		if ok2 {
 			return value, sig2, true //FINISH
 		}

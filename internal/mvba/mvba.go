@@ -1,8 +1,8 @@
 package mvba
 
 import (
-	"Buada_BFT/internal/mvba/smvba"
 	"Buada_BFT/internal/party"
+	"Buada_BFT/internal/smvba"
 	"Buada_BFT/pkg/protobuf"
 	"Buada_BFT/pkg/utils"
 	"bytes"
