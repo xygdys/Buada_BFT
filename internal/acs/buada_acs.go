@@ -20,7 +20,7 @@ import (
 
 //BuadaACS is the main process of Buada-ACS
 func BuadaACS(p *party.HonestParty, r uint32, proposal []byte) *sync.Map {
-	ctx, _ := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 
 	Pr := sync.Map{} //Proposal Set
 	mvbaValueChannel := make(chan []byte, 1)
@@ -102,30 +102,10 @@ func BuadaACS(p *party.HonestParty, r uint32, proposal []byte) *sync.Map {
 	//fmt.Println(resultValue)
 
 	//call help
-	var preM protobuf.FinalSetValue
-	proto.Unmarshal(resultValue, &preM)
-	msgStarShardChannels := make([]chan []byte, p.N)
-	for i := uint32(0); i < p.N; i++ {
-		msgStarShardChannels[i] = make(chan []byte, 1)
-	}
-	Mr := sync.Map{}
-	requiredPID := []uint32{}
+	var finalSet protobuf.FinalSetValue
+	proto.Unmarshal(resultValue, &finalSet)
+	resulutSet := vdd.CallHelp(p, ID, &finalSet, &Pr)
 
-	vectorHash := make([][]byte, p.N)
-	for i := 0; i < len(preM.Pid); i++ {
-		value, ok := Pr.Load(preM.Pid[i])
-		if ok {
-			Mr.Store(preM.Pid[i], value)
-		} else {
-			requiredPID = append(requiredPID, preM.Pid[i])
-		}
-		vectorHash[preM.Pid[i]] = preM.Hash[i]
-	}
-	go vdd.HelpListener(p, ID, nil, msgStarShardChannels)
-
-	if len(requiredPID) != 0 {
-		vdd.CallHelp(p, ID, vectorHash, requiredPID, msgStarShardChannels, &Mr)
-	}
-
-	return &Mr
+	cancel()
+	return resulutSet
 }

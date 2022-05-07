@@ -68,21 +68,17 @@ func messageHandler(ctx context.Context, p *party.HonestParty, IDr []byte, IDrj 
 				if err == nil {
 					coins = append(coins, payload.CoinShare)
 					if len(coins) == int(p.F+1) {
-
 						doneFlagChannel <- true
-						//fmt.Println("party", p.PID, "received f+1 doneMessage")
 					}
 					if len(coins) > int(2*p.F) {
 						coin, _ := tbls.Recover(pairing.NewSuiteBn256(), p.SigPK, coinName, coins, int(2*p.F+1), int(p.N))
 						l := utils.BytesToUint32(coin) % p.N //leader of round r
 						thisRoundLeader <- l                 //for message handler
 						leaderChannel <- l                   //for main process
-
 						return
 					}
 				}
 			}
-
 		}
 	}()
 
