@@ -15,10 +15,11 @@ func TestMainProcess(t *testing.T) {
 	N := uint32(4)
 	F := uint32(1)
 	sk, pk := party.SigKeyGen(N, 2*F+1)
+	tpke := party.EncKeyGen(N, F+1)
 
 	var p []*party.HonestParty = make([]*party.HonestParty, N)
 	for i := uint32(0); i < N; i++ {
-		p[i] = party.NewHonestParty(N, F, i, ipList, portList, pk, sk[i])
+		p[i] = party.NewHonestParty(N, F, i, ipList, portList, pk, sk[i], tpke[i])
 	}
 
 	for i := uint32(0); i < N; i++ {

@@ -3,6 +3,7 @@ package party
 import (
 	"Buada_BFT/pkg/core"
 	"Buada_BFT/pkg/protobuf"
+	"Buada_BFT/pkg/tpke"
 	"errors"
 	"sync"
 
@@ -28,10 +29,12 @@ type HonestParty struct {
 
 	SigPK *share.PubPoly  //tss pk
 	SigSK *share.PriShare //tss sk
+
+	TPKE *tpke.DefaultTpke //tse
 }
 
 //NewHonestParty return a new honest party object
-func NewHonestParty(N uint32, F uint32, pid uint32, ipList []string, portList []string, sigPK *share.PubPoly, sigSK *share.PriShare) *HonestParty {
+func NewHonestParty(N uint32, F uint32, pid uint32, ipList []string, portList []string, sigPK *share.PubPoly, sigSK *share.PriShare, tpke *tpke.DefaultTpke) *HonestParty {
 	p := HonestParty{
 		N:            N,
 		F:            F,
@@ -42,6 +45,7 @@ func NewHonestParty(N uint32, F uint32, pid uint32, ipList []string, portList []
 
 		SigPK: sigPK,
 		SigSK: sigSK,
+		TPKE:  tpke,
 	}
 	return &p
 }

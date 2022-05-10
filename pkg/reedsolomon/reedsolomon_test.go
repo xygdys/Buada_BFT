@@ -16,8 +16,9 @@ func TestEncode(t *testing.T) {
 	N := uint32(40)
 	F := uint32(10)
 	sk, pk := party.SigKeyGen(N, 2*F+1)
+	tpke := party.EncKeyGen(N, F+1)
 
-	p := party.NewHonestParty(N, F, 0, ipList, portList, pk, sk[0])
+	p := party.NewHonestParty(N, F, 0, ipList, portList, pk, sk[0], tpke[0])
 
 	coder := NewRScoder(int(p.F+1), int(p.N))
 

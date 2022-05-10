@@ -1,4 +1,4 @@
-package acs
+package aab
 
 import (
 	"Buada_BFT/internal/party"
@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestBuadaACS(t *testing.T) {
+func TestBuada(t *testing.T) {
 	ipList := []string{"127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1",
 		"127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1",
 		"127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1",
@@ -36,6 +36,7 @@ func TestBuadaACS(t *testing.T) {
 	}
 
 	result := make([][]byte, N)
+
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 	wg.Add(int(N))
@@ -48,12 +49,12 @@ func TestBuadaACS(t *testing.T) {
 		go func(i uint32) {
 			proposal := make([]byte, batchSize/int(N)*txSize)
 			rand.Read(proposal)
-			Mr := BuadaACS(p[i], 0, proposal)
+			m, _ := Buada(p[i], 0, proposal)
 			var buf bytes.Buffer
 			for j := uint32(0); j < N; j++ {
-				value, ok := Mr.Load(j)
+				value, ok := m[j]
 				if ok {
-					buf.Write(value.([]byte))
+					buf.Write(value)
 				}
 			}
 			mu.Lock()
@@ -69,5 +70,4 @@ func TestBuadaACS(t *testing.T) {
 			t.Error()
 		}
 	}
-
 }

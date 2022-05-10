@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  buada_build:
+    build: .
+    volumes:
+      - ./:/Buada_BFT
+    working_dir: /Buada_BFT
+    command: make build
+

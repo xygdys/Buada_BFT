@@ -42,6 +42,8 @@ func Encapsulation(messageType string, ID []byte, sender uint32, payloadMessage 
 		data, err = proto.Marshal((payloadMessage).(*protobuf.Weak))
 	case "Strong":
 		data, err = proto.Marshal((payloadMessage).(*protobuf.Strong))
+	case "Dec":
+		data, err = proto.Marshal((payloadMessage).(*protobuf.Dec))
 	}
 
 	if err != nil {
@@ -116,6 +118,10 @@ func Decapsulation(messageType string, m *protobuf.Message) any {
 		return &payloadMessage
 	case "Strong":
 		var payloadMessage protobuf.Strong
+		proto.Unmarshal(m.Data, &payloadMessage)
+		return &payloadMessage
+	case "Dec":
+		var payloadMessage protobuf.Dec
 		proto.Unmarshal(m.Data, &payloadMessage)
 		return &payloadMessage
 	default:

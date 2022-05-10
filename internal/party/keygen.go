@@ -1,6 +1,10 @@
 package party
 
 import (
+	"Buada_BFT/pkg/tpke"
+	"strconv"
+
+	tpk "github.com/WangZhuo2000/tpke"
 	"go.dedis.ch/kyber/v3/pairing"
 	"go.dedis.ch/kyber/v3/share"
 )
@@ -19,4 +23,18 @@ func SigKeyGen(n uint32, t uint32) ([]*share.PriShare, *share.PubPoly) {
 	//pub ploy
 	pubploy := priploy.Commit(suit.G2().Point().Base())
 	return npoints, pubploy
+}
+
+//EncKeyGen return tpkes
+func EncKeyGen(n uint32, t uint32) []*tpke.DefaultTpke {
+	secretKeySet := tpk.RandomSecretKeySet(int(t - 1))
+	publicKeySet := secretKeySet.PublicKeySet()
+	tpkes := []*tpke.DefaultTpke{}
+	for i := 0; i < int(n); i++ {
+		tpke, _ := tpke.NewDefaultTpke(int(t), secretKeySet.KeyShareUsingString(strconv.Itoa(i)).Serialize(),
+			publicKeySet.Serialize())
+
+		tpkes = append(tpkes, tpke)
+	}
+	return tpkes
 }

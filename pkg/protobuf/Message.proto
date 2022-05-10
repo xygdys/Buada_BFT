@@ -88,3 +88,8 @@ message Weak{
   repeated  uint32 shardID = 1;
   repeated  bytes senderShard = 2;
 }
+
+//TSE
+message Dec{
+  repeated  bytes decShares = 1;
+}

@@ -1,0 +1,8 @@
+N: 4
+F: 1
+IPList: [ "127.0.0.1", "127.0.0.1", "127.0.0.1", "127.0.0.1"]
+PortList: ["2001", "2002", "2003", "2004"]
+Txnum: 10000
+Statistic: "./statistic"
+PrepareTime: 60
+WaitTime: 60

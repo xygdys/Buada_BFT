@@ -1,69 +1,50 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/vivint/infectious"
+	"Buada_BFT/internal/aab"
+	"Buada_BFT/internal/party"
+	"Buada_BFT/pkg/config"
+	"Buada_BFT/pkg/utils/benchmark"
+	"Buada_BFT/pkg/utils/logger"
+	"crypto/rand"
+	"log"
+	"time"
 )
 
 func main() {
-	const (
-		required = 8
-		total    = 14
-	)
-
-	// Create a *FEC, which will require required pieces for reconstruction at
-	// minimum, and generate total total pieces.
-	f, err := infectious.NewFEC(required, total)
+	c, _ := config.NewConfig("./config.yaml", true)
+	logg := logger.NewLoggerWithID("config", c.PID)
+	tssConfig := config.TSSconfig{}
+	err := tssConfig.UnMarshal(c.TSSconfig)
 	if err != nil {
-		panic(err)
+		logg.Fatalf("fail to unmarshal tssConfig: %s", err.Error())
 	}
-
-	// Prepare to receive the shares of encoded data.
-	shares := make([]infectious.Share, total)
-	output := func(s infectious.Share) {
-		// the memory in s gets reused, so we need to make a deep copy
-		shares[s.Number] = s.DeepCopy()
-	}
-
-	// the data to encode must be padded to a multiple of required, hence the
-	// underscores.
-	text := "hello, world! __"
-	err = f.Encode([]byte(text), output)
+	tseConfig := config.TSEconfig{}
+	err = tseConfig.UnMarshal(c.TSEconfig)
 	if err != nil {
-		panic(err)
+		logg.Fatalf("fail to unmarshal tseConfig: %s", err.Error())
 	}
 
-	fmt.Println("----------------")
-	fmt.Println("Generated shares:")
-	// we now have total shares.
-	for _, share := range shares {
-		fmt.Printf("%d: %#v\n", share.Number, string(share.Data))
-	}
+	p := party.NewHonestParty(uint32(c.N), uint32(c.F), uint32(c.PID), c.IPList, c.PortList, tssConfig.Pk, tssConfig.Sk, tseConfig.Tpke)
+	p.InitReceiveChannel()
 
-	// Let's reconstitute with shares 0-5 missing and 1 piece corrupted.
-	shares = shares[4:]
-	shares[4].Data[0] = '!' // mutate some data
+	time.Sleep(time.Duration(c.PrepareTime))
 
-	fmt.Println("----------------")
-	fmt.Println("Fucked shares:")
-	for _, share := range shares {
-		fmt.Printf("%d: %#v\n", share.Number, string(share.Data))
-	}
+	p.InitSendChannel()
 
-	err = f.Correct(shares)
-	if err != nil {
-		panic(err)
-	}
+	txlength := 250
+	value := make([]byte, txlength*c.Txnum/c.N)
+	rand.Read(value)
 
-	result, err := f.Decode(nil, shares)
-	if err != nil {
-		panic(err)
-	}
+	benchmarkName := "Buada"
+	benchmark.InitBenchmark(c)
+	benchmark.Create(benchmarkName)
+	benchmark.Begin(benchmarkName, c.PID)
 
-	// we have the original data!
-	fmt.Println("----------------")
-	fmt.Println("Fixed shares:")
-	fmt.Printf("original text:  %#v\n", string(text))
-	fmt.Printf("recovered text: %#v\n", string(result))
+	_, resultLen := aab.Buada(p, 0, value)
+
+	log.Printf("results tx nums: %d", resultLen/txlength)
+	benchmark.End(benchmarkName, c.PID)
+	benchmark.Nums(benchmarkName, c.PID, resultLen/txlength)
+	_ = benchmark.BenchmarkOuput()
 }
