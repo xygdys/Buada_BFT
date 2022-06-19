@@ -94,9 +94,10 @@ func BuadaACS(p *party.HonestParty, r uint32, proposal []byte) *sync.Map {
 		}
 	}()
 
-	//wating until MVBA output
+	//wating until MVBA input
 	value := <-mvbaValueChannel
 	validation := <-mvbaValidationChannel
+
 	resultValue := mvba.MainProcess(p, ID, value, validation)
 
 	//fmt.Println(resultValue)

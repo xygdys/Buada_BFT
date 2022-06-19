@@ -7,15 +7,19 @@ import (
 	"Buada_BFT/pkg/utils/benchmark"
 	"Buada_BFT/pkg/utils/logger"
 	"crypto/rand"
+	"fmt"
 	"log"
 	"time"
 )
 
 func main() {
-	c, _ := config.NewConfig("./config.yaml", true)
+	c, err := config.NewConfig("./config.yaml", true)
+	if err != nil {
+		fmt.Println(err)
+	}
 	logg := logger.NewLoggerWithID("config", c.PID)
 	tssConfig := config.TSSconfig{}
-	err := tssConfig.UnMarshal(c.TSSconfig)
+	err = tssConfig.UnMarshal(c.TSSconfig)
 	if err != nil {
 		logg.Fatalf("fail to unmarshal tssConfig: %s", err.Error())
 	}
@@ -28,7 +32,8 @@ func main() {
 	p := party.NewHonestParty(uint32(c.N), uint32(c.F), uint32(c.PID), c.IPList, c.PortList, tssConfig.Pk, tssConfig.Sk, tseConfig.Tpke)
 	p.InitReceiveChannel()
 
-	time.Sleep(time.Duration(c.PrepareTime))
+	//time.Sleep(time.Duration(c.PrepareTime))
+	time.Sleep(time.Second * time.Duration(c.PrepareTime))
 
 	p.InitSendChannel()
 
@@ -47,4 +52,6 @@ func main() {
 	benchmark.End(benchmarkName, c.PID)
 	benchmark.Nums(benchmarkName, c.PID, resultLen/txlength)
 	_ = benchmark.BenchmarkOuput()
+
+	time.Sleep(time.Second * time.Duration(c.WaitTime))
 }

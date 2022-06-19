@@ -38,10 +38,10 @@ func (coder *RScoder) Encode(msg []byte) []infectious.Share {
 }
 
 //Decode returns the original message of the shares
-func (coder *RScoder) Decode(shares []infectious.Share) []byte {
+func (coder *RScoder) Decode(shares []infectious.Share) ([]byte, error) {
 	result, err := coder.fec.Decode(nil, shares)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return result[:len(result)-int(result[len(result)-1])]
+	return result[:len(result)-int(result[len(result)-1])], nil
 }

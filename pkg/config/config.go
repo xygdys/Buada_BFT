@@ -57,23 +57,24 @@ func (c *Config) ReadConfig(ConfigName string, isLocal bool) error {
 	}
 
 	err = yaml.Unmarshal(byt, c)
-	if err != nil {
-		goto ret
-	}
 
-	if c.N <= 0 || c.F < 0 {
-		return errors.Wrap(errors.New("N or F is negative"),
-			ConfigReadError.Error())
-	}
-
-	if c.N != len(c.IPList) || c.N != len(c.PortList) {
-		return errors.Wrap(errors.New("ip list"+
-			" length or port list length isn't match N"),
-			ConfigReadError.Error())
-	}
 	c.isRead = true
 
 	if !isLocal {
+		if err != nil {
+			goto ret
+		}
+
+		if c.N <= 0 || c.F < 0 {
+			return errors.Wrap(errors.New("N or F is negative"),
+				ConfigReadError.Error())
+		}
+
+		if c.N != len(c.IPList) || c.N != len(c.PortList) {
+			return errors.Wrap(errors.New("ip list"+
+				" length or port list length isn't match N"),
+				ConfigReadError.Error())
+		}
 		// id is begin from 0 to ... N-1
 		if c.PID >= c.N || c.PID < 0 {
 			return errors.New("ID is begin from 0 to N-1")

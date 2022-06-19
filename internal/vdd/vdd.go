@@ -48,7 +48,10 @@ func onlineErrorCorrection(p *party.HonestParty, ID []byte, coder *reedsolomon.R
 			for {
 				decodeShare = append(decodeShare, <-rM.decodeShareChannel)
 				if len(decodeShare) > int(2*p.F) {
-					resultMesssage := coder.Decode(decodeShare)
+					resultMesssage, err := coder.Decode(decodeShare)
+					if err != nil {
+						panic(err)
+					}
 					h := sha3.Sum512(resultMesssage)
 					if bytes.Equal(h[:], rM.hash) {
 						resultSet.LoadOrStore(rM.pid, resultMesssage)
@@ -122,7 +125,11 @@ func CallHelp(p *party.HonestParty, ID []byte, finalSet *protobuf.FinalSetValue,
 	callMessage := core.Encapsulation("Call", ID, p.PID, &protobuf.Call{
 		RequiredPID: requiredPIDs,
 	})
-	p.Broadcast(callMessage)
+	for i := uint32(0); i < p.N; i++ {
+		if i != p.PID {
+			p.Send(callMessage, i) //Important:Don't send to itself
+		}
+	}
 
 	for {
 		select {

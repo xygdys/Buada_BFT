@@ -7,4 +7,10 @@ services:
       - ./:/Buada_BFT
     working_dir: /Buada_BFT
     command: make build
+  config_build:
+    build: .
+    volumes:
+      - ./:/Buada_BFT
+    working_dir: /Buada_BFT
+    command: make config
 

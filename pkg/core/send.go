@@ -22,14 +22,15 @@ func MakeSendChannel(hostIP string, hostPort string) chan *protobuf.Message {
 	for retry {
 		addr, err1 = net.ResolveTCPAddr("tcp4", hostIP+":"+hostPort)
 		conn, err2 = net.DialTCP("tcp4", nil, addr)
-		conn.SetKeepAlive(true)
 		if err1 != nil || err2 != nil {
 			log.Fatalln(err1)
 			log.Fatalln(err2)
 			retry = true
+			continue
 		} else {
 			retry = false
 		}
+		conn.SetKeepAlive(true)
 	}
 	//Make the send channel and the handle func
 	sendChannel := make(chan *protobuf.Message, MAXMESSAGE)

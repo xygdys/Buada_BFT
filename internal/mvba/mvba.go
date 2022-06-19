@@ -90,6 +90,7 @@ func MainProcess(p *party.HonestParty, ID []byte, value []byte, validation []byt
 			resultValue := valueAndValidation[:len(valueAndValidation)-int(validationLen)-4]
 			//resultValidation := valueAndValidation[len(valueAndValidation)-int(validationLen):]
 			//TODO:Check whether resultValue is valid
+
 			return resultValue
 		}
 		//otherwise: recast failed, goto next round

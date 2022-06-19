@@ -2,6 +2,7 @@ package main
 
 import (
 	"Buada_BFT/pkg/config"
+	"fmt"
 	"log"
 )
 
@@ -10,5 +11,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	c.RemoteGen("../buildthings")
+	fmt.Println(c.N)
+	c.RemoteGen("./configs")
 }

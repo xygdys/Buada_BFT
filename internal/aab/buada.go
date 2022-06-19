@@ -11,25 +11,11 @@ import (
 
 //Buada is an asynchronous atomic broadcast
 func Buada(p *party.HonestParty, r uint32, value []byte) (map[uint32][]byte, int) {
-	//st := time.Now()
 
 	ID := utils.Uint32ToBytes(r)
 	cValue, _ := p.TPKE.Encrypt(value)
-	//fmt.Println("encrypt success", len(cValue))
-
-	// t1 := time.Since(st)
-	// if p.PID == 0 {
-	// 	fmt.Println("encrypt time:", t1)
-	// }
 
 	cResult := acs.BuadaACS(p, r, cValue)
-
-	// t2 := time.Since(st)
-	// if p.PID == 0 {
-	// 	fmt.Println("acs time:", t2-t1)
-	// }
-
-	//fmt.Println("acs success")
 
 	ids := []uint32{}
 	ciphers := [][]byte{}
@@ -46,11 +32,6 @@ func Buada(p *party.HonestParty, r uint32, value []byte) (map[uint32][]byte, int
 	for i := 0; i < len(ids); i++ {
 		shares = append(shares, tpke.DecShare(ciphers[i], p.TPKE))
 	}
-
-	// t3 := time.Since(st)
-	// if p.PID == 0 {
-	// 	fmt.Println("share time:", t3-t2)
-	// }
 
 	//fmt.Println("calulate share success")
 
@@ -75,11 +56,6 @@ func Buada(p *party.HonestParty, r uint32, value []byte) (map[uint32][]byte, int
 		}
 	}
 
-	// t4 := time.Since(st)
-	// if p.PID == 0 {
-	// 	fmt.Println("share exchange time:", t4-t3)
-	// }
-
 	pResult := map[uint32][]byte{}
 	resultLen := 0
 	for i := 0; i < len(ids); i++ {
@@ -87,15 +63,6 @@ func Buada(p *party.HonestParty, r uint32, value []byte) (map[uint32][]byte, int
 		pResult[ids[i]] = pValue
 		resultLen += len(pValue)
 	}
-
-	// t5 := time.Since(st)
-	// if p.PID == 0 {
-	// 	fmt.Println("decrypt time:", t5-t4)
-
-	// 	fmt.Println("additional compute time:", t1+t3-t2+t5-t4)
-
-	// 	fmt.Println("pResult time:", time.Since(st))
-	// }
 
 	return pResult, resultLen
 }

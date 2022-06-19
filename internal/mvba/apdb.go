@@ -115,7 +115,10 @@ func Recast(p *party.HonestParty, ID []byte, leader uint32, vc []byte, shard []b
 				Number: int(m.Sender),
 			})
 			if len(shares) > int(2*p.F) {
-				value := rsCoder.Decode(shares) //decode
+				value, err := rsCoder.Decode(shares) //decode
+				if err != nil {
+					panic(err)
+				}
 
 				tempShares := rsCoder.Encode(value) //re-encode
 

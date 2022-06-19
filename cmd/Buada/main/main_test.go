@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 	wg2.Add(N)
 	for i := 0; i < N; i++ {
 		go func(i int) {
-			path := "../buildthings/config_" + fmt.Sprint(i) + ".yaml"
+			path := "../../../configs/config_" + fmt.Sprint(i) + ".yaml"
 			c, _ := config.NewConfig(path, true)
 
 			logg := logger.NewLoggerWithID("config", c.PID)
